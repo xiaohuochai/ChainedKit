@@ -42,6 +42,10 @@ public extension Chained where T : UIView {
         return self
     }
     
+    var screenBounds: CGRect {
+        UIScreen.main.bounds
+    }
+    
     /// Adds a view to the end of the receiver’s list of subviews.
     @discardableResult
     func addSubview(_ view: UIView) -> Self {

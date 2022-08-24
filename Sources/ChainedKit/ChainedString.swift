@@ -56,6 +56,31 @@ public extension Chained where T == String {
         return nil
     }
     
+    /// Check if string contains one or more letters.
+    var hasLetters: Bool {
+        return self.base.rangeOfCharacter(from: .letters, options: .numeric, range: nil) != nil
+    }
+    
+    /// Check if string contains one or more numbers.
+    var hasNumbers: Bool {
+        return self.base.rangeOfCharacter(from: .decimalDigits, options: .literal, range: nil) != nil
+    }
+    
+    /// Check if string is valid email format.
+    var isEmail: Bool {
+        return self.regular(pattern: "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")
+    }
+    
+    ///  Verify if string matches the regex pattern.
+    ///
+    /// - Parameter pattern: Pattern to verify.
+    /// - Returns: true if string matches the pattern.
+    func regular(pattern: String) -> Bool {
+        return self.base.range(of: pattern,
+                     options: String.CompareOptions.regularExpression,
+                     range: nil, locale: nil) != nil
+    }
+    
     /// String with no spaces or new lines in beginning and end.
     var trimmed: String {
         return self.base.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -136,18 +161,31 @@ public extension Chained where T == String {
         switch formatter {
         case .number(let numberFormatter):
             return numberFormatter.string(for: self.base) ?? ""
-        case .second(let second, let dateFormat):
+        case .second(let second, let dateFormatType):
             let date = Date(timeIntervalSince1970: TimeInterval(second))
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.dateFormat = dateFormat
+            switch dateFormatType {
+            case .date:
+                formatter.dateFormat = "yyyy-MM-dd"
+            case .dateAndTime:
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            case let .custom(dateFormat):
+                formatter.dateFormat = dateFormat
+            }
             return formatter.string(from: date)
         }
     }
     
     enum Formatter {
         case number(NumberFormatter)
-        case second(Int, String)
+        case second(Int, DateFormatType)
+    }
+    
+    enum DateFormatType {
+        case date
+        case dateAndTime
+        case custom(String)
     }
 }
 
