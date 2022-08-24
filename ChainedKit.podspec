@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name             = 'ChainedKit'
-  s.version          = '1.0.0'
+  s.version          = '1.0.2'
   s.summary          = 'Chained Tools.'
   s.homepage         = 'https://github.com/xiaohuochai/ChainedKit.git'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
