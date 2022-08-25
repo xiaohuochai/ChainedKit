@@ -55,7 +55,7 @@ public class AsyncOperation: Operation {
 
     override public func start() {
         if isCancelled {
-            finish()
+            finished()
         } else {
             privateExecuting = true
             operationBlock?(self)
@@ -64,11 +64,11 @@ public class AsyncOperation: Operation {
     
     override public func cancel() {
         objc_sync_enter(self)
-        finish()
+        finished()
         objc_sync_exit(self)
     }
     
-    public func finish() {
+    public func finished() {
         super.cancel()
         if(privateExecuting) {
             privateFinished = true

@@ -1,7 +1,7 @@
 #
 # Be sure to run `pod lib lint ChainedKit.podspec --allow-warnings' to ensure this is a
 # valid spec before submitting.
-# `pod repo push motorFans ChainedKit.podspec --allow-warnings`
+# `pod trunk push ChainedKit.podspec --allow-warnings`
 # Any lines starting with a # are optional, but their use is encouraged
 # To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
 #
