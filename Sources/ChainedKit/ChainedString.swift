@@ -160,7 +160,7 @@ public extension Chained where T == String {
         
         switch formatter {
         case .number(let numberFormatter):
-            return numberFormatter.string(for: self.base) ?? ""
+            return numberFormatter.string(for: (self.base as NSString).floatValue) ?? ""
         case .second(let second, let dateFormatType):
             let date = Date(timeIntervalSince1970: TimeInterval(second))
             let formatter = DateFormatter()
@@ -186,6 +186,40 @@ public extension Chained where T == String {
         case date
         case dateAndTime
         case custom(String)
+    }
+    
+    /// Returns this value rounded to an string value using the specified rounding rule
+    ///
+    ///     "2.23".pointRounding(3) // 2.230
+    ///     "2.23".pointRounding(3, minimumDigits: 0) // 2.23
+    ///     "2.235".pointRounding(2) // 2.23
+    ///     "2.235".pointRounding(2, rule: .up) // 2.24
+    ///     "2.232".pointRounding(2, rule: .down) // 2.23
+    ///     "2.2".pointRounding(2, rule: .down) // 2.20
+    ///     "2.2".pointRounding(2, rule: .down, minimumDigits: 0) // 2.2
+    ///     "hello".pointRounding() // hello
+    ///
+    /// - Parameters:
+    ///   - number: Point number default is 2
+    ///   - rule: FloatingPointRoundingRule  default is `towardZero`
+    /// - Returns: The string value found by rounding using rule.
+    func pointRounding(_ number: Int = 2,
+                       rule: FloatingPointRoundingRule = .towardZero,
+                       minimumDigits: Int? = nil) -> String {
+        guard let baseFloat = Float(self.base) else {
+            return self.base
+        }
+        
+        let minimumDigits = minimumDigits ?? number
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = max(minimumDigits, number)
+        formatter.minimumFractionDigits = minimumDigits
+        formatter.minimumIntegerDigits = 1
+        
+        let divisor = pow(10.0, Float(number))
+        let rounded = String((baseFloat * divisor).rounded(rule)/divisor)
+        return formatter.string(for: (rounded as NSString).floatValue ) ?? self.base
     }
 }
 

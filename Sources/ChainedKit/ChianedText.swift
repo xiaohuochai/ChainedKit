@@ -24,6 +24,15 @@ public extension Chained where T : UILabel {
         return self
     }
     
+    /// Append Text
+    @discardableResult
+    func append(_ text: String?...) -> Self {
+        let appendText = text.compactMap{ $0 }.joined()
+        let nowString = [self.base.text,appendText].compactMap{ $0 }.joined()
+        self.base.text = nowString
+        return self
+    }
+    
     /// The technique for aligning the text.
     @discardableResult
     func alignment(_ alignment: NSTextAlignment) -> Self {
